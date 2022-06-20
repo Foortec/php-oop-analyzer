@@ -1,2 +1,2 @@
-# php-oop-analyzer
+# PHP OOP Analyzer
 PHP OOP code analyzer.
