@@ -98,7 +98,7 @@ class analyzer
         return $classNames;
     }
 
-    private function getClassNames() : array
+    private function getClassLines() : array
     {
         if(is_array($this->filepath))
         {
@@ -124,7 +124,7 @@ class analyzer
     private function getMethodNames() : array
     {
         if(!isset($this->classes))
-            $this->classes = $this->getClassNames;
+            $this->classes = $this->getClassLines;
         
         $methodNames = array();
         if(is_array($this->filepath))
@@ -145,7 +145,7 @@ class analyzer
             return $methodNames;
         }
 
-        @require($this->filepath);
+        require($this->filepath);
 
         for($j=0; $j<count($this->classes[$this->filepath]); $j++)
         {
@@ -159,7 +159,7 @@ class analyzer
 
     private function analyze() : void
     {
-        $this->classes = $this->getClassNames();
+        $this->classes = $this->getClassLines();
         $this->methods = $this->getMethodNames();
     }
 
@@ -168,8 +168,39 @@ class analyzer
         return $this->classes;
     }
 
+    public function getReflectionClasses() : array
+    {
+        $i=0;
+        foreach($this->classes as $classes)
+        {
+            foreach($classes as $class)
+            {
+                $return[$i] = new ReflectionClass($class);
+                $i++;
+            }
+        }
+        return $return;
+    }
+
     public function getMethods() : array
     {
         return $this->methods;
+    }
+
+    public function getReflectionMethods() : array
+    {
+        $i=0;
+        foreach($this->methods as $file => $classes)
+        {
+            foreach($classes as $class => $methods)
+            {
+                foreach($methods as $method)
+                {
+                    $return[$i] = new ReflectionMethod($class, $method);
+                    $i++;
+                }
+            }
+        }
+        return $return;
     }
 }
