@@ -10,7 +10,7 @@
 namespace foortec\analyzer;
 use ReflectionClass, ReflectionMethod;
 
-class analyzer
+class Analyzer
 {
     private array|string $filepath;
 
@@ -19,8 +19,8 @@ class analyzer
 
     public bool $error = false;
     public string $errorMessage = "";
-    const invalidPath = "Invalid path.";
-    const fileOpenError = "File missing or permission denied.";
+    const INVALID_PATH = "Invalid path.";
+    const FILE_OPEN_ERROR = "File missing or permission denied.";
 
     public function __construct(array|string $filepath = ".")
     {
@@ -50,14 +50,14 @@ class analyzer
     {
         if(!$array && !file_exists($this->filepath))
         {
-            $this->error(self::invalidPath);
+            $this->error(self::INVALID_PATH);
             return;
         }
 
         if(!is_array($this->filepath))
         {
             if(!file_exists($this->filepath))
-                $this->error(self::invalidPath);
+                $this->error(self::INVALID_PATH);
             return;
         }
 
@@ -65,7 +65,7 @@ class analyzer
         {    
             if(!file_exists($this->filepath[$i]))
             {
-                $this->error(self::invalidPath);
+                $this->error(self::INVALID_PATH);
                 break;
             }
         }
@@ -73,7 +73,7 @@ class analyzer
 
     private function getFileLines(string $filepath) : array
     {
-        $file = fopen($filepath, "r") or $this->error(self::fileOpenError);
+        $file = fopen($filepath, "r") or $this->error(self::FILE_OPEN_ERROR);
         if($this->error)
             return array();
         $fileContent = fread($file, filesize($filepath));
